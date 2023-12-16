@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+{{ title }}
+{% endblock title %}
+
+
+{% block main %}
+
+
+<div class="content-left-column" style="float: left;
+    margin-right: 28px;
+    width: 718px;">
+
+    {% include 'tor_games/components/_games-card.html' %}
+
+
+    {% include 'tor_games/components/_pages.html' %}
+
+
+</div>
+
+
+<div class="content-right-column" style="float: left;
+    width: 250px;">
+
+    {% include 'tor_games/components/_categories.html' %}
+</div>
+
+
+{% endblock main %}
+
+

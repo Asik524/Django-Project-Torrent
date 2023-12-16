@@ -1,0 +1,11 @@
+form p:nth-of-type(5) {
+    display: none;
+}
+
+form div {
+    display: none;
+}
+
+form span {
+    display: none;
+}

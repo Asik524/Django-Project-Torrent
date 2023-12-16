@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock title %}
+
+{% block main %}
+{% load static %}
+
+<div class="content-left-column" style="float: left; margin-right: 28px; margin-top: 30px; width: 718px; ">
+    <div class="article" style="margin: 0; width: 718px;">
+
+
+        <div class="article_block">
+            <div class="article_title">
+                <h1 style="font-size: 1.7em;">{{ game.title }}</h1>
+                <div class="article_created_at">
+                    Добавлено: <p>{{ game.created_at}}</p>
+                </div>
+            </div>
+            <div class="left-block" style="float: left; width: 200px;">
+                <img src="{{ game.photo.url }}" alt=""
+                     style="border-radius: 3px; width: 240px; height: 375px;">
+
+            </div>
+            <div class="right_block" style="padding-left: 215px; margin-left:40px;'">
+                <li style="list-style-type: none">Дата выпуска: {{ game.release_date_game }}</li>
+                <li style="list-style-type: none">Жанр: {{ game.genre_game }}</li>
+                <li style="list-style-type: none">Разработчик: {{ game.developer }}</li>
+                <li style="list-style-type: none">Издательство: {{ game.publisher }}</li>
+                <li style="list-style-type: none">Платформа: {{ game.platform }}</li>
+                <li style="list-style-type: none">Тип издания: {{ game.repack }}</li>
+                <li style="list-style-type: none">Язык интерфейса: <b>{{ game.interface_language }}</b></li>
+                <li style="list-style-type: none">Язык озвучки: <b>{{ game.voice_over_language }}</b></li>
+                <li style="list-style-type: none">Таблeтка: <b>{{ game.tablet }}</b></li>
+
+                <p class="system_requirements">
+                    <b>{{ game.system_requirements|linebreaks }}</b>
+                </p>
+                {% if game.changes %}
+                <div class="changes" style="padding: 0 8px; margin-top: 24px;">
+                    <h6 style="display: block; text-align: -webkit-center;">✅ Изменения: {{ game.changes }}</h6>
+                </div>
+                {% else %}
+                <div class="changes" style="padding: 0 8px; margin-top: 24px;">
+                    <h6 style="display: block; text-align: -webkit-center;">❌ Изменений нету</h6>
+                </div>
+                {% endif %}
+            </div>
+            <h4 class="description mt-3" style="color: green;">Описание игры:</h4>
+            <div class="description_block">
+                {{ game.context|linebreaks }}
+            </div>
+            <h4 class="trailer" style="color: green;">Трейлер:</h4>
+            <div class="trailer">
+                <iframe width="1140" height="641" src="{{ game.video }}"
+                        title="Official Trailer | Call of Duty: Modern Warfare 2 Campaign Remastered" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen style="border: 0; width: 100%; height: 400px;"></iframe>
+            </div>
+            <h4 class="repack" style="display: block; text-align: -webkit-center; color:green; margin-top:10px;">
+                {{ game.repack_and_repack_size }}</h4>
+
+            {% if game.download %}
+            <ul style="margin-top: 22px;margin-bottom: 10px;padding-left: 0px;">
+                <center>
+
+                    <a href="{% url 'download_file' game.id %}" class="torrent" style="text-decoration: none;
+                    background: green;
+                    padding: 10px;
+                    border-radius: 4px;
+                    font-size: 22px;
+                    padding-left: 30px;
+                    padding-right: 30px;
+                    text-decoration: none;
+                    color: white;
+                    border-radius: 3px;
+                    transition: .1s;">Download file
+                    </a>
+
+                    <div class="attach" style="margin-top:15px;">Скачали: {{ game.uploads }}</div>
+                </center>
+            </ul>
+            {% else %}
+            <ul style="margin-top: 22px;margin-bottom: 10px;padding-left: 0px;">
+                <center>
+                    Взлома нету советуем перейти на сайт <a href="https://ggsel.net/">GGSel</a> и купить игру по скидке.
+                </center>
+            </ul>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <h2>Рекомендуемые игры:</h2>
+    <div class="col-8">
+
+        {% include 'tor_games/components/_games-card.html' %}
+
+    </div>
+
+
+    <div class="card mt-4 p-3 bg-success  text-light">
+
+
+                <form action="{% url 'save_comment' game.pk %}" method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+
+                    <button type="submit" class="btn btn-danger">Оставить комментарий</button>
+                </form>
+
+
+
+
+    </div>
+
+    {% for comment in comments %}
+
+    <div class="comment mt-4 p-3 bg-success text-light">
+
+        <div class="comment_avatar" style="float: left; width: 70px;">
+            <img src="{{ comment.user.profile.get_photo_user }}" alt="" style="width: 70px; height: 70px;">
+        </div>
+        <div class="text" style="margin-left: 82px;">
+            <h3>{{ comment.user.username }}</h3>
+            <p>{{ comment.created_at }}</p>
+            <p>{{ comment.text }} </p>
+        </div>
+    </div>
+
+    {% endfor %}
+
+
+</div>
+
+
+<div class="content-right-column" style="float: left;
+    width: 250px;">
+
+    {% include 'tor_games/components/_categories.html' %}
+
+    <div class="popular_games">
+
+            <div class="card-games" style="margin-top: 30px; width:375px; margin-left:90px;">
+                {% with games|slice:":6" as shuffled_games %}
+                {% for game in shuffled_games %}
+                <div class="card_game justify-content-center" style="display: inline-block; margin-right: 22px; min-height: 30px; padding-bottom: 30px;
+                position: relative;
+                vertical-align: top;
+                width: 130px;">
+
+
+                <a href="{{ game.get_absolute_url }}" class="card-img-link">
+                    {% if game.photo %}
+                    <img height="175" src="{{ game.photo.url }}" alt="" class="card-img-top" style="width:120px;">
+                    {% else %}
+                    <img src="https://itorrents-igruha.org/uploads/posts/2023-02/1677002725_cover.jpg" alt="" style="width:163px; height:240px">
+                    {% endif %}
+                </a>
+
+
+                <a href="{{ game.get_absolute_url }}" class="games-title-link" style="display: block; margin-top: 10px; text-align: center; text-decoration: none; color: black; width:120px;">
+                    {{ game.title }}
+                </a>
+
+                </div>
+                {% endfor %}
+                {% endwith %}
+
+            </div>
+
+    </div>
+</div>
+
+
+{% endblock main %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

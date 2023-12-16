@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block title %}
+{{ title }}
+{% endblock title %}
+
+
+{% block main %}
+
+
+<div class="content-left-column" style="float: left;
+    margin-right: 28px;
+    width: 718px;">
+
+    {% if not request.user.is_authenticated %}
+
+    <div class="d-flex justify-content-center mt-4">
+        <div class="col-6 card p-4 bg-success" style="width: 900px; margin-top: 12px;">
+            <h3 class="text-center text-light">{{ title }}</h3>
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="form-floating flex-fill mb-4">
+                    {{ login_form.username }}
+                    <label for="{{ login_form.username.id_for_label }}" class="form-label">
+                        Логин
+                    </label>
+                </div>
+
+                <div class="form-floating flex-fill mb-4">
+                    {{ login_form.password }}
+                    <label for="{{ login_form.password.id_for_label }}" class="form-label">
+                        Пароль
+                    </label>
+                </div>
+
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{% url 'index' %}" class="btn btn-danger">Назад</a>
+
+                    <button type="submit" class="btn btn-primary">
+                        Войти
+                    </button>
+
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    {% else %}
+
+    <div>
+        <h1 style="margin-top: 250px;">Вы уже зарегистрированы</h1>
+        <h2><a href="{% url 'index' %}" style="text-decoration: none;">Главная страница</a></h2>
+    </div>
+
+    {% endif %}
+
+</div>
+
+
+<div class="content-right-column" style="float: left;
+    width: 250px;">
+
+    {% include 'tor_games/components/_categories.html' %}
+</div>
+
+
+{% endblock main %}
